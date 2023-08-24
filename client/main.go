@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/gost1k337/go_microservices/client_microservice/handlers"
+	"github.com/gost1k337/go_microservices/client_microservice/server"
 	"github.com/hashicorp/go-hclog"
-	"microservice_client/handlers"
-	"microservice_client/server"
 	"os"
 	"os/signal"
 	"syscall"

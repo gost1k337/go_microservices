@@ -1,4 +1,4 @@
-module currency
+module github.com/gost1k337/go_microservices/currency
 
 go 1.21
 

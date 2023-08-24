@@ -1,4 +1,4 @@
-module microservice_client
+module github.com/gost1k337/go_microservices/client_microservice
 
 go 1.21.0
 
