@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"github.com/gost1k337/go_microservices/client_microservice/handlers"
 	"github.com/gost1k337/go_microservices/client_microservice/server"
+	protos "github.com/gost1k337/go_microservices/currency/protos/currency"
 	"github.com/hashicorp/go-hclog"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,7 +16,16 @@ import (
 func main() {
 	log := hclog.Default()
 
-	h := handlers.New(log)
+	conn, err := grpc.Dial("localhost:9092", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Error("grpc: %w", err)
+		os.Exit(1)
+	}
+	defer conn.Close()
+
+	cc := protos.NewCurrencyClient(conn)
+
+	h := handlers.New(log, cc)
 
 	log.Info("Starting server on port: 8080")
 	srv := server.NewServer(":8080", h.HTTP())
@@ -31,7 +43,7 @@ func main() {
 
 	// Graceful shutdown
 	log.Info("Shutting down...")
-	err := srv.Shutdown()
+	err = srv.Shutdown()
 	if err != nil {
 		log.Error("app - Run - httpServer.Shutdown: %w", err)
 	}
